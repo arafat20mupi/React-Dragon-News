@@ -1,13 +1,33 @@
 import { Link } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Rigister = () => {
+
+    const {createUser}= useContext(AuthContext)
+
+
     const handleRigister = e => {
         e.preventDefault();
-        console.log(e.curreentTarget);
-        const from =  new FormData(e.curreentTarget)
-        console.log(from.get('password'));
-        }
+        console.log(e.target);
+        const from =  new FormData(e.target)
+
+        const name = from.get('name')
+        const email = from.get('email')
+        const photo = from.get('photo')
+        const password = from.get('password')
+        console.log(name, email,photo,password);
+
+        createUser(email,password)
+        .then(result =>{
+            console.log(result.user)
+        })
+        .catch(error =>{
+            console.error(error);}
+        )
+        } 
+        // 4 no vedio
     return (
         <div>
             <Navbar></Navbar>
@@ -16,7 +36,7 @@ const Rigister = () => {
                 <form onSubmit={handleRigister} className="space-y-6">
                     <div className="space-y-1 text-sm">
                         <label htmlFor="username" className="block text-xl font-semibold dark:text-gray-600"> your Name</label>
-                        <input type="text" name="Name" placeholder="Enter your Name" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"  required/>
+                        <input type="text" name="name" placeholder="Enter your Name" className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"  required/>
                     </div>
                     <div className="space-y-1 text-sm">
                         <label htmlFor="username" className="block text-xl font-semibold dark:text-gray-600"> Photo URL</label>

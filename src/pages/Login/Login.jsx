@@ -1,15 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
+import { FaFacebook, FaGithub, FaGoogle, FaTwitter } from "react-icons/fa";
+import { useContext } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Login = () => {
-
+    const { signInUser, createTwitterUser,createGoogleUser, createFacebookUser, createGithubUser } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
     const handleLogin = e => {
         e.preventDefault();
-        console.log(e.curreentTarget);
-        const from =  new FormData(e.curreentTarget)
-        console.log(from.get('password'));
-        }
+        console.log(e.target);
+        const from = new FormData(e.target)
+        const email = from.get('email')
+        const password = from.get('password')
+        console.log(email, password);
 
+        signInUser(email, password)
+            .then(result => {
+                console.log(result);
+                navigate(location?.state ? location.state : "/")
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
+    const handleGoogle = () => {
+        createGoogleUser()
+        .then(() => {
+            navigate(location?.state ? location.state : "/")
+        })
+    }
+    const handleTwitter = () => {
+        createTwitterUser()
+        .then(() => {
+            navigate(location?.state ? location.state : "/")
+        })
+    }
+
+    const handleFacebook = () => {
+        createFacebookUser()
+        .then(() => {
+            navigate(location?.state ? location.state : "/")
+        })
+    }
+
+    const handlegithub = () => {
+        createGithubUser()
+            .then(() => {
+                navigate(location?.state ? location.state : "/")
+            })
+    }
     return (
         <div>
             <Navbar></Navbar>
@@ -30,10 +72,34 @@ const Login = () => {
                     <button type="submit" className="block w-full p-3 text-center rounded-sm dark:text-gray-50 dark:bg-violet-600">Sign in</button>
                 </form>
                 <p className="text-xs text-center sm:px-6 dark:text-gray-600">Do not have an account?
-                <Link to="/register">
-                    <button className="ml-3 font-bold text-blue-600">Register</button>
-                </Link>
+                    <Link to="/register">
+                        <button className="ml-3 font-bold text-blue-600">Register</button>
+                    </Link>
                 </p>
+
+
+            </div>
+            <h2 className="flex justify-center text-lg mb-8">
+                Or Sign up using
+            </h2>
+            <div className="flex space-x-4 items-center justify-center">
+
+                <button
+                    onClick={handleGoogle}
+                    className="text-2xl"><FaGoogle />
+                </button>
+                <button
+                    onClick={handleFacebook}
+                    className="text-2xl"><FaFacebook />
+                </button>
+                <button
+                    onClick={handleTwitter}
+                    className="text-2xl"><FaTwitter />
+                </button>
+                <button
+                    onClick={handlegithub}
+                    className="text-2xl"><FaGithub />
+                </button>
             </div>
         </div>
     );
